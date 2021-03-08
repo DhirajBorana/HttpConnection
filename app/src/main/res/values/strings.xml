@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">HttpConn</string>
+    <string name="salary_label">Salary: </string>
+    <string name="age_label">Age: </string>
+</resources>
