@@ -9,8 +9,12 @@ import java.io.InputStreamReader
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
-object HttpHelper {
-    suspend fun send(requestMethod: RequestMethod, url: String, response: String = ""): Response {
+interface IHttpHelper {
+    suspend fun send(requestMethod: RequestMethod, url: String, response: String = ""): Response
+}
+
+object HttpHelper : IHttpHelper {
+    override suspend fun send(requestMethod: RequestMethod, url: String, response: String): Response {
         return withContext(Dispatchers.IO) {
             val outputResponse = StringBuilder()
             var responseCode = 0

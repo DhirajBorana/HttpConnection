@@ -4,17 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.httpconn.Employee
-import com.example.httpconn.EmployeeResponse
-import com.example.httpconn.HttpHelper
-import com.example.httpconn.RequestMethod
+import com.example.httpconn.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
-class MainViewModel : ViewModel() {
+class MainViewModel(private val httpHelper: IHttpHelper) : ViewModel() {
 
     private val mapper by lazy { ObjectMapper().registerKotlinModule() }
 
@@ -28,13 +23,12 @@ class MainViewModel : ViewModel() {
 
     fun getAll() {
         viewModelScope.launch {
-            try {
-                val response = HttpHelper.send(RequestMethod.GET,"https://dummy.restapiexample.com/api/v1/employees")
-                _employees.value = mapper.readValue(response.body, EmployeeResponse::class.java).data
-                _responseCode.value = response.code
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            val response = httpHelper.send(
+                RequestMethod.GET,
+                "https://dummy.restapiexample.com/api/v1/employees"
+            )
+            _employees.value = mapper.readValue(response.body, EmployeeResponse::class.java).data
+            _responseCode.value = response.code
         }
     }
 }

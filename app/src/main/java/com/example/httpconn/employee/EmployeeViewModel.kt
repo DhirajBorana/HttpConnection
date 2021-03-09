@@ -6,11 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.httpconn.Employee
 import com.example.httpconn.HttpHelper
+import com.example.httpconn.IHttpHelper
 import com.example.httpconn.RequestMethod
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
-class EmployeeViewModel : ViewModel() {
+class EmployeeViewModel(private val httpHelper: IHttpHelper) : ViewModel() {
     
     private val _responseCode = MutableLiveData<Int>()
     val responseCode: LiveData<Int>
@@ -20,7 +21,7 @@ class EmployeeViewModel : ViewModel() {
     fun deleteEmployee(id: String) {
         viewModelScope.launch {
             _responseCode.value =
-                HttpHelper.send(RequestMethod.DELETE, "https://dummy.restapiexample.com/api/v1/delete/$id").code
+                httpHelper.send(RequestMethod.DELETE, "https://dummy.restapiexample.com/api/v1/delete/$id").code
         }
     }
 }
